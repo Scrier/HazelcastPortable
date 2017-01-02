@@ -1,13 +1,14 @@
 package io.scrier.hazelcast.portable.ver1;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.hazelcast.nio.serialization.Portable;
 import com.hazelcast.nio.serialization.PortableReader;
 import com.hazelcast.nio.serialization.PortableWriter;
+import io.scrier.hazelcast.portable.BitSetHelper;
 
 import java.io.IOException;
 import java.util.BitSet;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -43,10 +44,24 @@ public class PortableImpl implements Portable {
 
     public static PortableImpl generate(int flags) {
         PortableImpl result = new PortableImpl();
-        if( 0 < (flags & 0x00000001) ) result.setIntValue(random.nextInt());
-        if( 0 < (flags & 0x00000002) ) result.setStringValue(String.valueOf(random.nextLong()));
-        if( 0 < (flags & 0x00000004) ) result.setDoubleValue(random.nextDouble());
-        if( 0 < (flags & 0x00000008) ) result.setLongValue(random.nextLong());
+        StringBuilder builder = new StringBuilder("Generating: ");
+        if( 0 < (flags & 0x00000001) ) {
+            result.setIntValue(random.nextInt());
+            builder.append(INT_VALUE + ":");
+        }
+        if( 0 < (flags & 0x00000002) ) {
+            result.setStringValue(String.valueOf(random.nextLong()));
+            builder.append(STRING_VALUE + ":");
+        }
+        if( 0 < (flags & 0x00000004) ) {
+            result.setDoubleValue(random.nextDouble());
+            builder.append(DOUBLE_VALUE + ":");
+        }
+        if( 0 < (flags & 0x00000008) ) {
+            result.setLongValue(random.nextLong());
+            builder.append(LONG_VALUE + ":");
+        }
+        System.out.println(builder.toString());
         return result;
     }
 
@@ -100,26 +115,51 @@ public class PortableImpl implements Portable {
 
     public void writePortable(PortableWriter writer) throws IOException {
         writer.writeByteArray(BITSET, bitSet.toByteArray());
-        if( bitSet.get(0) )
+        if( bitSet.get(0) ) {
             writer.writeInt(INT_VALUE, intValue);
-        if( bitSet.get(1) )
+            System.out.println("Writing: " + INT_VALUE);
+        } else {
+            writer.writeInt(INT_VALUE, 0);
+        }
+        if( bitSet.get(1) ) {
             writer.writeUTF(STRING_VALUE, stringValue);
-        if( bitSet.get(2) )
+            System.out.println("Writing: " + STRING_VALUE);
+        } else {
+            writer.writeUTF(STRING_VALUE, null);
+        }
+        if( bitSet.get(2) ) {
             writer.writeDouble(DOUBLE_VALUE, doubleValue);
-        if( bitSet.get(3) )
+            System.out.println("Writing: " + DOUBLE_VALUE);
+        } else {
+            writer.writeDouble(DOUBLE_VALUE, 0.0);
+        }
+        if( bitSet.get(3) ) {
             writer.writeLong(LONG_VALUE, longValue);
+            System.out.println("Writing: " + LONG_VALUE);
+        } else {
+            writer.writeLong(LONG_VALUE, 0L);
+        }
     }
 
     public void readPortable(PortableReader reader) throws IOException {
         bitSet = BitSet.valueOf(reader.readByteArray(BITSET));
-        if( bitSet.get(0) )
+        System.out.println(bitSet);
+        if( bitSet.get(0) && reader.hasField(INT_VALUE) ) {
             intValue = reader.readInt(INT_VALUE);
-        if( bitSet.get(1) )
+            System.out.println(intValue);
+        }
+        if( bitSet.get(1) && reader.hasField(STRING_VALUE) ) {
             stringValue = reader.readUTF(STRING_VALUE);
-        if( bitSet.get(2) )
+            System.out.println(stringValue);
+        }
+        if( bitSet.get(2) && reader.hasField(DOUBLE_VALUE) ) {
             doubleValue = reader.readDouble(DOUBLE_VALUE);
-        if( bitSet.get(3) )
+            System.out.println(doubleValue);
+        }
+        if( bitSet.get(3) && reader.hasField(LONG_VALUE) ) {
             longValue = reader.readLong(LONG_VALUE);
+            System.out.println(longValue);
+        }
     }
 
     @Override
@@ -127,21 +167,22 @@ public class PortableImpl implements Portable {
         if (object == null) return false;
         if (getClass() != object.getClass()) return false;
         final PortableImpl other = (PortableImpl) object;
-        return Objects.equals(intValue, other.intValue) &&
-                Objects.equals(stringValue, other.stringValue) &&
-                Objects.equals(doubleValue, other.doubleValue) &&
-                Objects.equals(longValue, other.longValue);
+        return Objects.equal(intValue, other.intValue) &&
+                Objects.equal(stringValue, other.stringValue) &&
+                Objects.equal(doubleValue, other.doubleValue) &&
+                Objects.equal(longValue, other.longValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(intValue, stringValue, doubleValue, longValue);
+        return Objects.hashCode(intValue, stringValue, doubleValue, longValue);
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(PortableImpl.class)
                 .add(BITSET, bitSet)
+                .add(BITSET + "AsBytes", bitSet.toByteArray())
                 .add(INT_VALUE, intValue)
                 .add(STRING_VALUE, stringValue)
                 .add(DOUBLE_VALUE, doubleValue)

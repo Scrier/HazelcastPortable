@@ -17,8 +17,8 @@ public class PortableFactoryImpl implements PortableFactory {
 
     public static Config populate(Config config) {
         config.getSerializationConfig().addPortableFactory(FACTORY_ID, new PortableFactoryImpl())
-                .setPortableVersion(1)
-                .addClassDefinition(createPortableDefinition());
+                //.addClassDefinition(createPortableDefinition())
+                .setPortableVersion(1);
         return config;
     }
 

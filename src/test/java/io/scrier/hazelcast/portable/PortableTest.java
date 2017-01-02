@@ -6,6 +6,7 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
@@ -49,8 +50,23 @@ public class PortableTest {
         IMap<String, io.scrier.hazelcast.portable.ver1.PortableImpl> readMap = ver1.getMap("Ver1ToVer1");
 
         io.scrier.hazelcast.portable.ver1.PortableImpl expected = io.scrier.hazelcast.portable.ver1.PortableImpl.generate(0x0000000F);
-        writeMap.put("test", expected);
-        io.scrier.hazelcast.portable.ver1.PortableImpl actual = readMap.get("test");
+        writeMap.put("testVer1ToVer1", expected);
+        io.scrier.hazelcast.portable.ver1.PortableImpl actual = readMap.get("testVer1ToVer1");
+
+        System.out.println(expected);
+        System.out.println(actual);
+
+        assertThat(expected, is(actual));
+    }
+
+    @Test
+    public void testVer1ToVer1Rand() {
+        IMap<String, io.scrier.hazelcast.portable.ver1.PortableImpl> writeMap = ver1.getMap("Ver1ToVer1Rand");
+        IMap<String, io.scrier.hazelcast.portable.ver1.PortableImpl> readMap = ver1.getMap("Ver1ToVer1Rand");
+
+        io.scrier.hazelcast.portable.ver1.PortableImpl expected = io.scrier.hazelcast.portable.ver1.PortableImpl.generate();
+        writeMap.put("testVer1ToVer1Rand", expected);
+        io.scrier.hazelcast.portable.ver1.PortableImpl actual = readMap.get("testVer1ToVer1Rand");
 
         System.out.println(expected);
         System.out.println(actual);
@@ -64,8 +80,23 @@ public class PortableTest {
         IMap<String, io.scrier.hazelcast.portable.ver2.PortableImpl> readMap = ver2.getMap("Ver2ToVer2");
 
         io.scrier.hazelcast.portable.ver2.PortableImpl expected = io.scrier.hazelcast.portable.ver2.PortableImpl.generate(0x0000001F);
-        writeMap.put("test", expected);
-        io.scrier.hazelcast.portable.ver2.PortableImpl actual = readMap.get("test");
+        writeMap.put("testVer2ToVer2", expected);
+        io.scrier.hazelcast.portable.ver2.PortableImpl actual = readMap.get("testVer2ToVer2");
+
+        System.out.println(expected);
+        System.out.println(actual);
+
+        assertThat(expected, is(actual));
+    }
+
+    @Test
+    public void testVer2ToVer2Rand() {
+        IMap<String, io.scrier.hazelcast.portable.ver2.PortableImpl> writeMap = ver2.getMap("Ver2ToVer2Rand");
+        IMap<String, io.scrier.hazelcast.portable.ver2.PortableImpl> readMap = ver2.getMap("Ver2ToVer2Rand");
+
+        io.scrier.hazelcast.portable.ver2.PortableImpl expected = io.scrier.hazelcast.portable.ver2.PortableImpl.generate();
+        writeMap.put("testVer2ToVer2Rand", expected);
+        io.scrier.hazelcast.portable.ver2.PortableImpl actual = readMap.get("testVer2ToVer2Rand");
 
         System.out.println(expected);
         System.out.println(actual);
@@ -79,8 +110,23 @@ public class PortableTest {
         IMap<String, io.scrier.hazelcast.portable.ver3.PortableImpl> readMap = ver3.getMap("Ver3ToVer3");
 
         io.scrier.hazelcast.portable.ver3.PortableImpl expected = io.scrier.hazelcast.portable.ver3.PortableImpl.generate(0x0000000F);
-        writeMap.put("test", expected);
-        io.scrier.hazelcast.portable.ver3.PortableImpl actual = readMap.get("test");
+        writeMap.put("testVer3ToVer3", expected);
+        io.scrier.hazelcast.portable.ver3.PortableImpl actual = readMap.get("testVer3ToVer3");
+
+        System.out.println(expected);
+        System.out.println(actual);
+
+        assertThat(expected, is(actual));
+    }
+
+    @Test
+    public void testVer3ToVer3Rand() {
+        IMap<String, io.scrier.hazelcast.portable.ver3.PortableImpl> writeMap = ver3.getMap("Ver3ToVer3Rand");
+        IMap<String, io.scrier.hazelcast.portable.ver3.PortableImpl> readMap = ver3.getMap("Ver3ToVer3Rand");
+
+        io.scrier.hazelcast.portable.ver3.PortableImpl expected = io.scrier.hazelcast.portable.ver3.PortableImpl.generate();
+        writeMap.put("testVer3ToVer3Rand", expected);
+        io.scrier.hazelcast.portable.ver3.PortableImpl actual = readMap.get("testVer3ToVer3Rand");
 
         System.out.println(expected);
         System.out.println(actual);
@@ -93,9 +139,11 @@ public class PortableTest {
         IMap<String, io.scrier.hazelcast.portable.ver1.PortableImpl> writeMap = ver1.getMap("Ver1ToVer2");
         IMap<String, io.scrier.hazelcast.portable.ver2.PortableImpl> readMap = ver2.getMap("Ver1ToVer2");
 
-        io.scrier.hazelcast.portable.ver1.PortableImpl expected = io.scrier.hazelcast.portable.ver1.PortableImpl.generate();
-        writeMap.put("test", expected);
-        io.scrier.hazelcast.portable.ver2.PortableImpl actual = readMap.get("test");
+        io.scrier.hazelcast.portable.ver1.PortableImpl expected = io.scrier.hazelcast.portable.ver1.PortableImpl.generate(0x0000000F);
+
+        System.out.println(expected);
+        writeMap.put("testVer1ToVer2", expected);
+        io.scrier.hazelcast.portable.ver2.PortableImpl actual = readMap.get("testVer1ToVer2");
 
         System.out.println(expected);
         System.out.println(actual);
@@ -104,6 +152,83 @@ public class PortableTest {
         assertThat(actual.getIntValue(), is(expected.getIntValue()));
         assertThat(actual.getLongValue(), is(expected.getLongValue()));
         assertThat(actual.getStringValue(), is(expected.getStringValue()));
+    }
+
+    @Test
+    public void testVer1ToVer2Rand() {
+        IMap<String, io.scrier.hazelcast.portable.ver1.PortableImpl> writeMap = ver1.getMap("Ver1ToVer2Rand");
+        IMap<String, io.scrier.hazelcast.portable.ver2.PortableImpl> readMap = ver2.getMap("Ver1ToVer2Rand");
+
+        io.scrier.hazelcast.portable.ver1.PortableImpl expected = io.scrier.hazelcast.portable.ver1.PortableImpl.generate();
+
+        System.out.println(expected);
+        writeMap.put("testVer1ToVer2Rand", expected);
+        io.scrier.hazelcast.portable.ver2.PortableImpl actual = readMap.get("testVer1ToVer2Rand");
+
+        System.out.println(expected);
+        System.out.println(actual);
+
+        assertThat(actual.getDoubleValue(), is(expected.getDoubleValue()));
+        assertThat(actual.getIntValue(), is(expected.getIntValue()));
+        assertThat(actual.getLongValue(), is(expected.getLongValue()));
+        assertThat(actual.getStringValue(), is(expected.getStringValue()));
+    }
+
+    @Test
+    public void testVer2ToVer3() {
+        IMap<String, io.scrier.hazelcast.portable.ver2.PortableImpl> writeMap = ver2.getMap("Ver2ToVer3");
+        IMap<String, io.scrier.hazelcast.portable.ver3.PortableImpl> readMap = ver3.getMap("Ver2ToVer3");
+
+        io.scrier.hazelcast.portable.ver2.PortableImpl expected = io.scrier.hazelcast.portable.ver2.PortableImpl.generate(0x0000001F);
+
+        System.out.println(expected);
+        writeMap.put("testVer2ToVer3", expected);
+        io.scrier.hazelcast.portable.ver3.PortableImpl actual = readMap.get("testVer2ToVer3");
+
+        System.out.println(expected);
+        System.out.println(actual);
+
+        assertThat(actual.getDoubleValue(), is(expected.getDoubleValue()));
+        assertThat(actual.getIntValue(), is(expected.getIntValue()));
+        assertThat(actual.getLongValue(), is(expected.getLongValue()));
+        assertThat(actual.getShortValue(), is(expected.getShortValue()));
+    }
+
+    @Test
+    public void testVer2ToVer3Rand() {
+        IMap<String, io.scrier.hazelcast.portable.ver2.PortableImpl> writeMap = ver2.getMap("Ver2ToVer3Rand");
+        IMap<String, io.scrier.hazelcast.portable.ver3.PortableImpl> readMap = ver3.getMap("Ver2ToVer3Rand");
+
+        io.scrier.hazelcast.portable.ver2.PortableImpl expected = io.scrier.hazelcast.portable.ver2.PortableImpl.generate();
+
+        System.out.println(expected);
+        writeMap.put("testVer2ToVer3Rand", expected);
+        io.scrier.hazelcast.portable.ver3.PortableImpl actual = readMap.get("testVer2ToVer3Rand");
+
+        System.out.println(expected);
+        System.out.println(actual);
+
+        assertThat(actual.getDoubleValue(), is(expected.getDoubleValue()));
+        assertThat(actual.getIntValue(), is(expected.getIntValue()));
+        assertThat(actual.getLongValue(), is(expected.getLongValue()));
+        assertThat(actual.getShortValue(), is(expected.getShortValue()));
+    }
+
+    @Test
+    @Ignore("Only Run Manual")
+    public void testAll() {
+        for( int i = 0; i < 100; i++ ) {
+            testVer1ToVer1();
+            testVer1ToVer1Rand();
+            testVer1ToVer2();
+            testVer1ToVer2Rand();
+            testVer2ToVer2();
+            testVer2ToVer2Rand();
+            testVer3ToVer3();
+            testVer3ToVer3Rand();
+            testVer2ToVer3();
+            testVer2ToVer3Rand();
+        }
     }
 
 }
